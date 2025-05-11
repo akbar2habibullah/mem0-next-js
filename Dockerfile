@@ -11,7 +11,7 @@ COPY package.json package-lock.json* yarn.lock* pnpm-lock.yaml* ./
 # If you use yarn: yarn install --frozen-lockfile
 # If you use pnpm: pnpm install --frozen-lockfile
 # Assuming npm for this example:
-RUN npm ci
+RUN pnpm install --prod --frozen-lockfile
 
 # Stage 3: Build the Next.js application using Node.js
 FROM base-node AS builder
@@ -37,7 +37,7 @@ COPY package.json package-lock.json* yarn.lock* pnpm-lock.yaml* ./
 # If you use yarn: yarn install --production --frozen-lockfile
 # If you use pnpm: pnpm install --prod --frozen-lockfile
 # Assuming npm for this example:
-RUN npm ci --omit=dev
+RUN pnpm install --prod --frozen-lockfile
 
 # Copy the built Next.js app from the 'builder' stage
 COPY --from=builder /usr/src/app/.next ./.next
