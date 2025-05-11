@@ -16,6 +16,10 @@ COPY . .
 
 RUN npm run build
 
+RUN chown -R node:node /usr/src/app/.next \
+                       /usr/src/app/public \
+                       /usr/src/app/node_modules
+
 EXPOSE 3000
 USER node
 CMD ["npm", "run", "start"]
