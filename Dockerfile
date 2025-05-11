@@ -41,7 +41,7 @@ RUN bun install --frozen-lockfile --production
 COPY --from=builder /usr/src/app/.next ./.next
 COPY --from=builder /usr/src/app/public ./public
 COPY --from=builder /usr/src/app/next.config.ts ./next.config.ts
-# package.json is already copied
+COPY --from=builder /usr/src/app/package.json ./package.json 
 
 FROM base-node AS starter
 ENV NODE_ENV=production
