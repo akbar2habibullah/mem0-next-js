@@ -24,4 +24,4 @@ RUN chown -R node:node /usr/src/app
 EXPOSE 3000
 USER node
 
-CMD ["pm2-runtime", "start", "ecosystem.config.ts"]
+CMD ["pm2-runtime", "start", "node_modules/.bin/next", "--name", "nextjs-app", "--", "start"]
