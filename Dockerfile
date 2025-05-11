@@ -6,11 +6,14 @@ WORKDIR /usr/src/app
 
 FROM base-bun AS deps
 COPY package.json bun.lockb* package-lock.json* yarn.lock* pnpm-lock.yaml* ./
-
 RUN bun install --frozen-lockfile
 
 FROM base-node AS runner
 ENV NODE_ENV=production
+
+# Install PM2 globally
+RUN npm install -g pm2
+
 COPY --from=deps /usr/src/app/node_modules ./node_modules
 COPY . .
 
@@ -20,4 +23,5 @@ RUN chown -R node:node /usr/src/app
 
 EXPOSE 3000
 USER node
-CMD ["npm", "run", "start"]
+
+CMD ["pm2-runtime", "start", "ecosystem.config.js"]
