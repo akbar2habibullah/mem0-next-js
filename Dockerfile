@@ -7,7 +7,7 @@ WORKDIR /usr/src/app
 # this will cache them and speed up future builds
 FROM base AS install
 COPY package.json bun.lockb /usr/src/app
-RUN cd /temp/dev && bun install --frozen-lockfile
+RUN cd /usr/src/app && bun install --frozen-lockfile
 
 # install with --production (exclude devDependencies)
 COPY package.json bun.lockb /usr/src/app
