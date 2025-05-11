@@ -40,7 +40,7 @@ RUN bun install --frozen-lockfile --production
 # Copy the built Next.js app from the 'builder' stage
 COPY --from=builder /usr/src/app/.next ./.next
 COPY --from=builder /usr/src/app/public ./public
-COPY --from=builder /usr/src/app/next.config.js ./next.config.js
+COPY --from=builder /usr/src/app/next.config.ts ./next.config.ts
 # package.json is already copied
 
 EXPOSE 3000
