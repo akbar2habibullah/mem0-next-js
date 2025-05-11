@@ -106,9 +106,11 @@ export async function put(
     key = `${nameWithoutExtension}-${randomSuffix}${extension}`;
   }
 
+  
   const s3Params: PutObjectCommandInput = {
     Bucket: S3_BUCKET_NAME!,
     Key: key,
+    // @ts-expect-error
     Body: body instanceof globalThis.Blob ? await body.arrayBuffer() : body, // Convert Blob to ArrayBuffer/Buffer if needed by SDK for stream/size
   };
 
