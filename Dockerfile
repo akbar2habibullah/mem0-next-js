@@ -40,6 +40,7 @@ RUN bun install --frozen-lockfile --production
 FROM base-node AS starter
 ENV NODE_ENV=production
 # Copy the built Next.js app from the 'builder' stage
+COPY --from=deps /usr/src/app/node_modules ./node_modules
 COPY --from=builder /usr/src/app/.next ./.next
 COPY --from=builder /usr/src/app/public ./public
 COPY --from=builder /usr/src/app/next.config.ts ./next.config.ts
