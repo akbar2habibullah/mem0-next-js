@@ -49,25 +49,13 @@ export interface RequestHints {
   country: Geo['country'];
 }
 
-export const getRequestPromptFromHints = (requestHints: RequestHints) => `\
-About the origin of user's request:
-- lat: ${requestHints.latitude}
-- lon: ${requestHints.longitude}
-- city: ${requestHints.city}
-- country: ${requestHints.country}
-`;
-
 export const systemPrompt = ({
   selectedChatModel,
-  requestHints,
   memories,
 }: {
   selectedChatModel: string;
-  requestHints: RequestHints;
   memories?: string;
 }) => {
-  const requestPrompt = getRequestPromptFromHints(requestHints);
-
   if (selectedChatModel === 'mbak-ai') {
     if (memories) {
       return `${specialPrompt}\n\n${memories}`;
@@ -75,7 +63,7 @@ export const systemPrompt = ({
       return `${specialPrompt}`;
     }
   } else {
-    return `${regularPrompt}\n\n${requestPrompt}\n\n${artifactsPrompt}`;
+    return `${regularPrompt}\n\n${artifactsPrompt}`;
   }
 };
 
