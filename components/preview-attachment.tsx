@@ -24,6 +24,10 @@ export const PreviewAttachment = ({
               alt={name ?? 'An image attachment'}
               className="rounded-md size-full object-cover"
             />
+          ) : contentType.startsWith('application/pdf') ? (
+            // NOTE: it is recommended to use next/image for images
+            // eslint-disable-next-line @next/next/no-img-element
+            <div className="">PDF</div>
           ) : (
             <div className="" />
           )
