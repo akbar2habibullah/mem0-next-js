@@ -15,7 +15,7 @@ COPY package.json bun.lockb* package-lock.json* yarn.lock* pnpm-lock.yaml* ./
 # RUN npm install --global bun
 # RUN bun install --frozen-lockfile
 # OR, more standardly for a Node.js builder:
-RUN npm ci
+RUN npm install --frozen-lockfile
 
 # Stage 4: Build the Next.js application using Node.js
 FROM base-node AS builder
