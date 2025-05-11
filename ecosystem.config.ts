@@ -5,6 +5,7 @@ module.exports = {
       name: 'mem0-next-app', // Your application name
       script: 'node_modules/.bin/next', // Path to the next executable
       args: 'start',     // Argument to pass to the script (start next server)
+      interpreter: 'node', // **You can add this line for explicitness**
       instances: 'max',  // Or a specific number, e.g., 2. 'max' uses all available CPUs
       exec_mode: 'cluster',// Enable clustering
       watch: false,      // Don't use watch in production with Docker
