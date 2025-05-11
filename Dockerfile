@@ -43,6 +43,8 @@ COPY --from=builder /usr/src/app/public ./public
 COPY --from=builder /usr/src/app/next.config.ts ./next.config.ts
 # package.json is already copied
 
+FROM base-node AS starter
+ENV NODE_ENV=production
 EXPOSE 3000
 USER node
 CMD ["npm", "run", "start"]
