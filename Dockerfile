@@ -1,46 +1,48 @@
-# Stage 1: Base image with Bun
-# Pin to a specific version for reproducible builds
-FROM oven/bun:1.1.8 AS base
+# Stage 1: Base Bun image (for the runner)
+FROM oven/bun:1.1.8 AS base-bun
+WORKDIR /usr/src/app
+
+# Stage 2: Base Node.js image (for the builder)
+# Use a Long-Term Support (LTS) version of Node.js
+# Node.js 18+ has good support for Web Streams APIs globally
+FROM node:18-alpine AS base-node
+WORKDIR /usr/src/app
+
+# Stage 3: Install all dependencies using Node.js and npm/yarn/pnpm
+FROM base-node AS deps
+COPY package.json bun.lockb* package-lock.json* yarn.lock* pnpm-lock.yaml* ./
+# If you strictly want to use bun for install even in Node.js builder:
+# RUN npm install --global bun
+# RUN bun install --frozen-lockfile
+# OR, more standardly for a Node.js builder:
+RUN npm ci # or yarn install --frozen-lockfile or pnpm install --frozen-lockfile
+
+# Stage 4: Build the Next.js application using Node.js
+FROM base-node AS builder
+ENV NODE_ENV=production
+COPY --from=deps /usr/src/app/node_modules ./node_modules
+COPY . .
+# If you used bun for install in 'deps' stage:
+# RUN npm install --global bun
+# RUN bun run build
+# OR, more standardly for a Node.js builder:
+RUN npm run build
+
+# Stage 5: Production image using Bun
+FROM base-bun AS runner
 WORKDIR /usr/src/app
 ENV NODE_ENV=production
 
-# Stage 2: Install all dependencies (including devDependencies for building)
-FROM base AS deps
-COPY package.json bun.lockb ./
-# Install ALL dependencies needed for the build process
-RUN bun install --frozen-lockfile
-
-# Stage 3: Build the Next.js application
-FROM base AS builder
-# Copy dependencies from the 'deps' stage
-COPY --from=deps /usr/src/app/node_modules ./node_modules
-# Copy the rest of the application source code
-COPY . .
-# Run the build script (e.g., next build)
-RUN bun run build
-
-# Stage 4: Production image
-# Use the same base or a slim version if available and suitable
-FROM base AS runner
-WORKDIR /usr/src/app
-
-# Install ONLY production dependencies
+# Install ONLY production dependencies using Bun
 COPY package.json bun.lockb ./
 RUN bun install --frozen-lockfile --production
 
 # Copy the built Next.js app from the 'builder' stage
 COPY --from=builder /usr/src/app/.next ./.next
-COPY --from=builder /usr/src/app/public ./public # If you have a public folder
-COPY --from=builder /usr/src/app/next.config.js ./next.config.js # If you have one
-# package.json is already copied for bun install, but ensure it's there for `bun run start`
-# COPY --from=builder /usr/src/app/package.json ./package.json
+COPY --from=builder /usr/src/app/public ./public
+COPY --from=builder /usr/src/app/next.config.js ./next.config.js
+# package.json is already copied
 
-# Expose the port Next.js runs on
 EXPOSE 3000
-
-# Set the user to 'bun' (good practice)
 USER bun
-
-# Command to run the Next.js app
-# Ensure your package.json has a "start": "next start" script
 CMD ["bun", "run", "start"]
