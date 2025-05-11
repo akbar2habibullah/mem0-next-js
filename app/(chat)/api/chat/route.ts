@@ -34,7 +34,7 @@ import {
 import { after } from 'next/server';
 import type { Chat } from '@/lib/db/schema';
 import { differenceInSeconds } from 'date-fns';
-import { memory } from '@/lib/mem0'
+import { getMemoryInstance } from '@/lib/mem0'
 import { MultiModalMessages } from 'mem0ai/oss'
 
 export const maxDuration = 60;
@@ -180,17 +180,28 @@ export async function POST(request: Request) {
     let memories: string
 
     if (selectedChatModel === 'mbak-ai') {
+      console.log("Trying to use memory...");
+      
       try {
-        await memory.add(convertedMessages, { userId: username === 'user' ? session.user.id : 'Habib', metadata: { category: "conversation" } });
-      } catch (error) {
-        console.error(error)
-      }
+        const memory = await getMemoryInstance();
+        console.log("Memory instance obtained. Adding data...");
 
-      try {
-        const listMemories = await memory.search(message.content, { userId: username === 'user' ? session.user.id : 'Habib', agentId: selectedChatModel })
-        memories = `This is what I remember from ${username}:\n\n${listMemories.results.map((data) => `- ${data.memory}`).join('\n')}`
+        try {
+          await memory?.add(convertedMessages, { userId: username === 'user' ? session.user.id : 'Habib', metadata: { category: "conversation" } });
+        } catch (error) {
+          console.error(error)
+        }
+
+        try {
+          const listMemories = await memory?.search(message.content, { userId: username === 'user' ? session.user.id : 'Habib', agentId: selectedChatModel })
+          memories = `This is what I remember from ${username}:\n\n${listMemories?.results.map((data) => `- ${data.memory}`).join('\n')}`
+
+        } catch (error) {
+          console.error(error)
+        }
       } catch (error) {
-        console.error(error)
+        console.error("Error using memory:", error);
+        // Handle the error appropriately, maybe rethrow or return a specific error object
       }
     }
 
