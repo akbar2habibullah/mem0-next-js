@@ -8,7 +8,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 
 config({
-  path: '.env.local',
+  path: '.env',
 });
 
 // --- S3 Client Configuration ---

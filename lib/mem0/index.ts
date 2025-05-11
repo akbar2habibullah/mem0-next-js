@@ -3,7 +3,7 @@ import { config } from 'dotenv';
 import { Memory } from 'mem0ai/oss';
 
 config({
-  path: '.env.local',
+  path: '.env',
 });
 
 let memoryInstance: Memory | null = null; // Singleton instance
