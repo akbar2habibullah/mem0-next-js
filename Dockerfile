@@ -2,7 +2,7 @@
 # Pin to a specific version for reproducible builds
 FROM oven/bun:1.1.8 AS base
 WORKDIR /usr/src/app
-ENV NODE_ENV=production # Set NODE_ENV for all subsequent stages unless overridden
+ENV NODE_ENV=production
 
 # Stage 2: Install all dependencies (including devDependencies for building)
 FROM base AS deps
