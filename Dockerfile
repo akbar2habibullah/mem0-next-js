@@ -28,17 +28,6 @@ COPY . .
 # OR, more standardly for a Node.js builder:
 RUN npm run build
 
-# Stage 5: Production image using Bun
-FROM base-bun AS runner
-WORKDIR /usr/src/app
-ENV NODE_ENV=production
-
-# Install ONLY production dependencies using Bun
-COPY package.json bun.lockb ./
-RUN bun install --frozen-lockfile --production
-
-FROM base-node AS starter
-ENV NODE_ENV=production
 # Copy the built Next.js app from the 'builder' stage
 COPY --from=deps /usr/src/app/node_modules ./node_modules
 COPY --from=builder /usr/src/app/.next ./.next
