@@ -37,14 +37,14 @@ ENV NODE_ENV=production
 COPY package.json bun.lockb ./
 RUN bun install --frozen-lockfile --production
 
+FROM base-node AS starter
+ENV NODE_ENV=production
 # Copy the built Next.js app from the 'builder' stage
 COPY --from=builder /usr/src/app/.next ./.next
 COPY --from=builder /usr/src/app/public ./public
 COPY --from=builder /usr/src/app/next.config.ts ./next.config.ts
 COPY --from=builder /usr/src/app/package.json ./package.json 
 
-FROM base-node AS starter
-ENV NODE_ENV=production
 EXPOSE 3000
 USER node
 CMD ["npm", "run", "start"]
