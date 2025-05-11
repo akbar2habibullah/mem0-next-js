@@ -9,13 +9,13 @@ FROM node:18-alpine AS base-node
 WORKDIR /usr/src/app
 
 # Stage 3: Install all dependencies using Node.js and npm/yarn/pnpm
-FROM base-node AS deps
+FROM base-bun AS deps
 COPY package.json bun.lockb* package-lock.json* yarn.lock* pnpm-lock.yaml* ./
 # If you strictly want to use bun for install even in Node.js builder:
 # RUN npm install --global bun
 # RUN bun install --frozen-lockfile
 # OR, more standardly for a Node.js builder:
-RUN npm install --frozen-lockfile
+RUN bun install --frozen-lockfile
 
 # Stage 4: Build the Next.js application using Node.js
 FROM base-node AS builder
