@@ -47,7 +47,7 @@ export async function getMemoryInstance() {
         provider: 'google',
         config: {
           apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
-          model: 'gemini-1.5-flash-latest', // Updated to a common model, ensure yours is valid
+          model: 'gemini-2.5-flash-preview-04-17',
         },
       },
       historyStore: {
