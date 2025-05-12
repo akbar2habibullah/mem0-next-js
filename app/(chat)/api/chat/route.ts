@@ -227,6 +227,8 @@ export async function POST(request: Request) {
           system: systemPrompt({ selectedChatModel, memories }),
           messages,
           maxSteps: 5,
+          maxTokens: 1024,
+          temperature: 1,
           experimental_activeTools:
                 [
                   'createDocument',
