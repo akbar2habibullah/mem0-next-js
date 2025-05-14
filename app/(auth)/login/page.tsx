@@ -45,7 +45,7 @@ export default function Page() {
   }, [state.status]);
 
   const handleSubmit = (formData: FormData) => {
-    setEmail(formData.get('email') as string);
+    setEmail((formData.get('email') as string).toLowerCase());
     formAction(formData);
   };
 
